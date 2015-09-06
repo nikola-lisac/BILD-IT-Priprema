@@ -3,6 +3,7 @@ package priprema;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -40,7 +41,7 @@ public class DatabaseQueries {
 
 			}
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -53,27 +54,31 @@ public class DatabaseQueries {
 	 */
 	public static int inputOptionNumber() {
 		Scanner input = null;
-		int number = 0;
+		boolean isOk = false; // loop control variable
+		int number = 0; // variable which will store user's input
 
-		try {
+		// loops until user enters an integer
+		while (!isOk) {
 			input = new Scanner(System.in);
-			boolean isOk = false;
-			while (!isOk) {
-				isOk = true;
-				// input from keyboard
-				number = input.nextInt();
-				// the number is valid if it is the number of one of the options
-				if (number < 0 || number > 4) {
-					System.out.println("Try again: ");
+			isOk = true;
+
+			try {
+				number = input.nextInt(); // users input
+				if(number<0 || number>5){
 					isOk = false;
 				}
+
+			} catch (InputMismatchException e) { // if user enters something
+													// other than integer
+				System.out.println("Wrong input, try again: ");
+				input.nextLine();
+				isOk = false;
 			}
-		} catch (InputMismatchException e) {
-			System.out.println("Wrong input, you need to enter an integer, try again: ");
-			inputOptionNumber();
 		}
 
+		// return entered integer
 		return number;
+
 	}
 
 	/**
@@ -91,8 +96,10 @@ public class DatabaseQueries {
 			boolean isOk = false;
 			while (!isOk) {
 				isOk = true;
+				// user enters a char
 				character = input.next().charAt(0);
 				character = Character.toUpperCase(character);
+				// if the char isn't a letter, ask user to try again
 				if (character < 'A' || character > 'Z') {
 					System.out.println("Try again: ");
 					isOk = false;
@@ -105,6 +112,25 @@ public class DatabaseQueries {
 
 		return character;
 	}
+	
+	/**
+	 * Getting input string from scanner
+	 * 
+	 * @return entered string
+	 */
+	public static String inputNextLine() {
+		Scanner input = null;
+		String inputString = "";
+		try {
+		input = new Scanner(System.in);
+		 inputString = input.nextLine();
+		} catch (Exception a){
+			System.out.println("Wrong input, try again: ");
+			inputNextLine();
+		}
+		return inputString;
+
+	}
 
 	public static void main(String[] args) {
 
@@ -112,7 +138,8 @@ public class DatabaseQueries {
 		System.out.println("[1] List of 20 most populated countries");
 		System.out.println("[2] Number of countries on every continent");
 		System.out.println("[3] List of countries that start with specific letter");
-		System.out.println("[4] List of cities that start with specific lette");
+		System.out.println("[4] List of cities that start with specific letter");
+		System.out.println("[5] View informations about specific country");
 		System.out.println("\n[0] Exit");
 		System.out.println("Choose an option by entering the number: ");
 		// user select an option by entering a number
@@ -122,11 +149,6 @@ public class DatabaseQueries {
 		// depanding on the entered number, call database method with specific
 		// arguments
 		switch (optionNumber) {
-
-		case 0: { // program exit
-			System.out.println("Bye!");
-			System.exit(0);
-		}
 
 		case 1: { // print name and the continent of the countries with the largest population
 			// sql query instruction
@@ -179,7 +201,27 @@ public class DatabaseQueries {
 			databaseOutput(query, "CountryCode", "Name");
 			break;
 		}
+		
+		case 5: { // view informations about entered country
+			System.out.println("Enter the country name: ");
+			// user enters a country
+			String country = inputNextLine();
+			// get Code,Name,Region,SurfaceArea,Population for entered country from database
+			query = "SELECT Code,Name,Region,SurfaceArea,Population FROM country WHERE Name = '"+country+"';";
+			System.out.println(String.format("%-20s %-20s %-20s %-20s %-20s","Code","Name","Region","SurfaceArea","Population"));
+			System.out.println("-----------------------------------------------------------------------------------------------");
+			// execute query
+			databaseOutput(query, "Code","Name","Region","SurfaceArea","Population");
+			break;
 		}
+		
+		// exit the program
+		default: {
+			System.out.println("Bye!");
+			System.exit(0);
+		}
+		}
+		
 	}
 
 }

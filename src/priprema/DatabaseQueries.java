@@ -32,18 +32,11 @@ public class DatabaseQueries {
 
 			// print results
 			while (myResult.next()) {
-				// if two column names need to be displayed
-				if (args.length == 2) {
-					// display data from the table
-					System.out.println(
-							String.format("%-20s %s", myResult.getString(args[0]), myResult.getString(args[1])));
+				// print fields from table depending on number of columns that need to be displayed
+				for(int i = 0;i<args.length;i++){
+					System.out.print(String.format("%-20s ",myResult.getString(args[i])));
 				}
-				// if three column names need to be displayed
-				else {
-					// display data from the table
-					System.out.println(String.format("%-20s %-20s %s", myResult.getString(args[0]),
-							myResult.getString(args[1]), myResult.getString(args[2])));
-				}
+				System.out.println();
 
 			}
 

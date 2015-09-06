@@ -10,7 +10,6 @@ import java.util.Scanner;
 
 public class DatabaseQueries {
 
-
 	/**
 	 * Method which connects with the database, executes defined query and
 	 * prints results
@@ -33,9 +32,10 @@ public class DatabaseQueries {
 
 			// print results
 			while (myResult.next()) {
-				// print fields from table depending on number of columns that need to be displayed
-				for(int i = 0;i<args.length;i++){
-					System.out.print(String.format("%-20s ",myResult.getString(args[i])));
+				// print fields from table depending on number of columns that
+				// need to be displayed
+				for (int i = 0; i < args.length; i++) {
+					System.out.print(String.format("%-20s ", myResult.getString(args[i])));
 				}
 				System.out.println();
 
@@ -64,7 +64,7 @@ public class DatabaseQueries {
 
 			try {
 				number = input.nextInt(); // users input
-				if(number<0 || number>5){
+				if (number < 0 || number > 5) {
 					isOk = false;
 				}
 
@@ -112,7 +112,7 @@ public class DatabaseQueries {
 
 		return character;
 	}
-	
+
 	/**
 	 * Getting input string from scanner
 	 * 
@@ -122,9 +122,9 @@ public class DatabaseQueries {
 		Scanner input = null;
 		String inputString = "";
 		try {
-		input = new Scanner(System.in);
-		 inputString = input.nextLine();
-		} catch (Exception a){
+			input = new Scanner(System.in);
+			inputString = input.nextLine();
+		} catch (Exception a) {
 			System.out.println("Wrong input, try again: ");
 			inputNextLine();
 		}
@@ -150,7 +150,8 @@ public class DatabaseQueries {
 		// arguments
 		switch (optionNumber) {
 
-		case 1: { // print name and the continent of the countries with the largest population
+		case 1: { // print name and the continent of the countries with the
+					// largest population
 			// sql query instruction
 			query = "SELECT Name, Continent, Population FROM country ORDER BY Population DESC LIMIT 20;";
 			// print header
@@ -201,27 +202,30 @@ public class DatabaseQueries {
 			databaseOutput(query, "CountryCode", "Name");
 			break;
 		}
-		
+
 		case 5: { // view informations about entered country
 			System.out.println("Enter the country name: ");
 			// user enters a country
 			String country = inputNextLine();
-			// get Code,Name,Region,SurfaceArea,Population for entered country from database
-			query = "SELECT Code,Name,Region,SurfaceArea,Population FROM country WHERE Name = '"+country+"';";
-			System.out.println(String.format("%-20s %-20s %-20s %-20s %-20s","Code","Name","Region","SurfaceArea","Population"));
-			System.out.println("-----------------------------------------------------------------------------------------------");
+			// get Code,Name,Region,SurfaceArea,Population for entered country
+			// from database
+			query = "SELECT Code,Name,Region,SurfaceArea,Population FROM country WHERE Name = '" + country + "';";
+			System.out.println(String.format("%-20s %-20s %-20s %-20s %-20s", "Code", "Name", "Region", "SurfaceArea",
+					"Population"));
+			System.out.println(
+					"-----------------------------------------------------------------------------------------------");
 			// execute query
-			databaseOutput(query, "Code","Name","Region","SurfaceArea","Population");
+			databaseOutput(query, "Code", "Name", "Region", "SurfaceArea", "Population");
 			break;
 		}
-		
-		// exit the program
+
+			// exit the program
 		default: {
 			System.out.println("Bye!");
 			System.exit(0);
 		}
 		}
-		
+
 	}
 
 }
